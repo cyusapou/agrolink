@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --soil:#060f08;
+  --deep:#0b1a0e;
+  --surface:#111f14;
+  --card:#162019;
+  --border:rgba(127,209,71,0.12);
+  --lime:#7fd147;
+  --lime-dim:#5aab2e;
+  --gold:#f5a832;
+  --cream:#f0ede4;
+  --muted:#6b8a62;
+  --serif:'Fraunces',serif;
+  --sans:'Plus Jakarta Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--soil);color:var(--cream);font-family:var(--sans);overflow-x:hidden;line-height:1.6}
+
+/* GRAIN OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.4;pointer-events:none;z-index:9999;
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:rgba(6,15,8,0.7)}
+.logo{font-family:var(--serif);font-size:22px;font-weight:900;letter-spacing:-0.5px;color:var(--cream)}
+.logo span{color:var(--lime)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
+.nav-links a:hover{color:var(--cream)}
+.nav-cta{background:var(--lime);color:#060f08;padding:10px 22px;border-radius:100px;font-size:13px;font-weight:600;text-decoration:none;transition:background 0.2s}
+.nav-cta:hover{background:#9aed60}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg-circle{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.hero-bg-circle.c1{width:600px;height:600px;background:radial-gradient(circle,rgba(127,209,71,0.15),transparent 70%);top:-100px;right:-100px;animation:drift1 12s ease-in-out infinite alternate}
+.hero-bg-circle.c2{width:400px;height:400px;background:radial-gradient(circle,rgba(245,168,50,0.1),transparent 70%);bottom:0;left:100px;animation:drift2 14s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(40px,30px)}}
+@keyframes drift2{to{transform:translate(-30px,-20px)}}
+
+.hero-tag{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-size:12px;color:var(--lime);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:32px;width:fit-content;position:relative;z-index:1;animation:fadeUp 0.8s ease both}
+.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+
+.hero h1{font-family:var(--serif);font-size:clamp(52px,8vw,96px);font-weight:900;line-height:0.95;letter-spacing:-2px;position:relative;z-index:1;animation:fadeUp 0.8s 0.1s ease both}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--lime)}
+.hero-sub{font-size:17px;color:var(--muted);max-width:480px;margin-top:28px;line-height:1.7;position:relative;z-index:1;animation:fadeUp 0.8s 0.2s ease both}
+.hero-actions{display:flex;gap:16px;margin-top:44px;position:relative;z-index:1;animation:fadeUp 0.8s 0.3s ease both}
+.btn-primary{background:var(--lime);color:#060f08;padding:16px 36px;border-radius:100px;font-size:15px;font-weight:600;text-decoration:none;transition:all 0.2s}
+.btn-primary:hover{background:#9aed60;transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--border);color:var(--cream);padding:16px 32px;border-radius:100px;font-size:15px;font-weight:500;text-decoration:none;transition:all 0.2s}
+.btn-ghost:hover{border-color:rgba(127,209,71,0.4);transform:translateY(-2px)}
+
+.hero-stats{display:flex;gap:48px;margin-top:72px;padding-top:40px;border-top:1px solid var(--border);position:relative;z-index:1;animation:fadeUp 0.8s 0.4s ease both}
+.stat-num{font-family:var(--serif);font-size:36px;font-weight:900;color:var(--cream);letter-spacing:-1px}
+.stat-num span{color:var(--lime)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase}
+
+/* MARQUEE */
+.marquee-wrap{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0;overflow:hidden;background:var(--deep)}
+.marquee-track{display:flex;gap:48px;animation:marquee 24s linear infinite;width:max-content}
+.marquee-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.marquee-item .dot{width:4px;height:4px;border-radius:50%;background:var(--lime)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* LISTINGS */
+.section{padding:100px 48px}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px}
+.section-label{font-size:11px;color:var(--lime);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-1px;line-height:1}
+.section-title em{font-style:italic;font-weight:300}
+.view-all{color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.view-all:hover{color:var(--cream)}
+.view-all::after{content:'→';transition:transform 0.2s}
+.view-all:hover::after{transform:translateX(4px)}
+
+.listings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+
+.listing-card{background:var(--card);padding:28px;position:relative;overflow:hidden;cursor:pointer;transition:background 0.2s;border-radius:2px}
+.listing-card:hover{background:#1c2d1f}
+.listing-card::before{content:'';position:absolute;inset:0;border:1px solid transparent;border-radius:2px;transition:border-color 0.2s}
+.listing-card:hover::before{border-color:var(--border)}
+.listing-card.featured{grid-column:span 2;background:linear-gradient(135deg,#0e2211,#111f14)}
+.card-badge{display:inline-flex;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px}
+.badge-fresh{background:rgba(127,209,71,0.15);color:var(--lime)}
+.badge-bulk{background:rgba(245,168,50,0.15);color:var(--gold)}
+.badge-exp{background:rgba(240,237,228,0.1);color:var(--cream)}
+.card-produce{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px}
+.listing-card.featured .card-produce{font-size:44px;letter-spacing:-1px}
+.card-coop{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:20px}
+.card-coop span{color:rgba(127,209,71,0.7)}
+.card-details{display:flex;align-items:flex-end;justify-content:space-between;margin-top:auto}
+.card-price{font-family:var(--serif);font-size:32px;font-weight:900;color:var(--cream);letter-spacing:-0.5px}
+.listing-card.featured .card-price{font-size:48px}
+.card-price sub{font-size:14px;font-family:var(--sans);font-weight:500;color:var(--muted);letter-spacing:0}
+.card-volume{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
+.card-order-btn{background:rgba(127,209,71,0.1);border:1px solid rgba(127,209,71,0.25);color:var(--lime);padding:10px 20px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.card-order-btn:hover{background:var(--lime);color:#060f08}
+.card-district{position:absolute;top:28px;right:28px;font-size:11px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:4px}
+.card-district::before{content:'📍';font-size:10px}
+
+/* FLOW SECTION */
+.flow-section{padding:100px 48px;background:var(--deep);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.flow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:56px}
+.flow-step{padding:40px 32px;background:var(--surface);position:relative;border-radius:2px}
+.flow-num{font-family:var(--serif);font-size:80px;font-weight:900;line-height:1;color:var(--border);letter-spacing:-2px;margin-bottom:20px}
+.flow-step:hover .flow-num{color:rgba(127,209,71,0.2)}
+.flow-icon{font-size:28px;margin-bottom:16px}
+.flow-title{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-0.3px}
+.flow-desc{font-size:13px;color:var(--muted);line-height:1.65}
+.flow-arrow{position:absolute;right:-14px;top:50%;transform:translateY(-50%);z-index:2;color:var(--lime);font-size:20px;opacity:0.4}
+.flow-step:last-child .flow-arrow{display:none}
+
+/* TRUST STRIP */
+.trust-section{padding:80px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.trust-quote{font-family:var(--serif);font-size:clamp(22px,3vw,34px);font-weight:300;font-style:italic;line-height:1.4;letter-spacing:-0.5px;color:var(--cream)}
+.trust-quote strong{font-weight:700;font-style:normal;color:var(--lime)}
+.trust-attribution{margin-top:20px;font-size:13px;color:var(--muted);font-weight:500}
+.trust-metrics{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.metric-card{background:var(--card);padding:32px;border-radius:2px}
+.metric-val{font-family:var(--serif);font-size:48px;font-weight:900;color:var(--cream);letter-spacing:-1px}
+.metric-val span{color:var(--lime)}
+.metric-desc{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em}
+
+/* CTA */
+.cta-section{padding:120px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(127,209,71,0.08) 0%,transparent 70%)}
+.cta-label{font-size:11px;color:var(--lime);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:20px}
+.cta-title{font-family:var(--serif);font-size:clamp(44px,7vw,84px);font-weight:900;letter-spacing:-2px;line-height:0.95;margin-bottom:32px}
+.cta-title em{font-style:italic;font-weight:300;color:var(--lime)}
+.cta-sub{font-size:16px;color:var(--muted);max-width:440px;margin:0 auto 48px;line-height:1.7}
+.cta-btns{display:flex;gap:16px;justify-content:center}
+
+/* FOOTER */
+footer{padding:48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:var(--serif);font-size:18px;font-weight:900;color:var(--cream)}
+.footer-logo span{color:var(--lime)}
+.footer-copy{font-size:12px;color:var(--muted)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* PORTAL SWITCHER */
+.portal-switch{position:fixed;bottom:28px;right:28px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.portal-btn{background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:10px 18px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center}
+.portal-btn:hover{background:var(--lime);color:#060f08;border-color:var(--lime)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Agro<span>Link</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Marketplace</a></li>
+    <li><a href="#">Cooperatives</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <a href="#" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+  </div>
+
+  <div class="hero-tag">🌱 Live in 3 districts · Kigali, Musanze, Huye</div>
+
+  <h1>Rwanda's Farm<br>to <em>Table</em><br>Marketplace</h1>
+
+  <p class="hero-sub">
+    Cooperative managers list produce. Hotels, restaurants, and schools buy directly.
+    No middlemen. Fair prices. MTN MoMo payments.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#listings" class="btn-primary">Browse Produce</a>
+    <a href="#how" class="btn-ghost">How it works →</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">214<span>+</span></div>
+      <div class="stat-label">Cooperatives</div>
+    </div>
+    <div>
+      <div class="stat-num">1,800<span>+</span></div>
+      <div class="stat-label">Farmers reached</div>
+    </div>
+    <div>
+      <div class="stat-num">48<span>h</span></div>
+      <div class="stat-label">Avg. order fulfillment</div>
+    </div>
+    <div>
+      <div class="stat-num">34<span>%</span></div>
+      <div class="stat-label">Better price for farmers</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="dot"></span>Tomatoes · Musanze</div>
+    <div class="marquee-item"><span class="dot"></span>Irish Potatoes · Ruhango</div>
+    <div class="marquee-item"><span class="dot"></span>Maize · Nyanza</div>
+    <div class="marquee-item"><span class="dot"></span>Avocado · Nyamasheke</div>
+    <div class="marquee-item"><span class="dot"></span>Beans · Gatsibo</div>
+    <div class="marquee-item"><span class="dot"></span>Coffee · Nyamagabe</div>
+    <div class="marquee-item"><span class="dot"></span>Sorghum · Kayonza</div>
+    <div class="marquee-item"><span class="dot"></span>Cassava · Kirehe</div>
+    <div class="marquee-item"><span class="dot"></span>Tomatoes · Musanze</div>
+    <div class="marquee-item"><span class="dot"></span>Irish Potatoes · Ruhango</div>
+    <div class="marquee-item"><span class="dot"></span>Maize · Nyanza</div>
+    <div class="marquee-item"><span class="dot"></span>Avocado · Nyamasheke</div>
+    <div class="marquee-item"><span class="dot"></span>Beans · Gatsibo</div>
+    <div class="marquee-item"><span class="dot"></span>Coffee · Nyamagabe</div>
+    <div class="marquee-item"><span class="dot"></span>Sorghum · Kayonza</div>
+    <div class="marquee-item"><span class="dot"></span>Cassava · Kirehe</div>
+  </div>
+</div>
+
+<!-- LISTINGS -->
+<section class="section" id="listings">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Live Stock</div>
+      <div class="section-title">Fresh <em>from</em><br>the field</div>
+    </div>
+    <a href="#" class="view-all">View all listings</a>
+  </div>
+
+  <div class="listings-grid">
+    <!-- Featured -->
+    <div class="listing-card featured">
+      <span class="card-badge badge-bulk">Bulk available</span>
+      <div class="card-district">Musanze District</div>
+      <div class="card-produce">Irish Potatoes</div>
+      <div class="card-coop">Musanze North Coop · <span>Verified ✓</span></div>
+      <div style="display:flex;gap:24px;margin:20px 0;font-size:13px;color:var(--muted)">
+        <span>🌿 Organically grown</span>
+        <span>📦 500kg available</span>
+        <span>🚚 Delivery in 24h</span>
+      </div>
+      <div class="card-details">
+        <div>
+          <div class="card-volume">Per kilogram</div>
+          <div class="card-price">280 <sub>RWF/kg</sub></div>
+        </div>
+        <button class="card-order-btn">Place Order →</button>
+      </div>
+    </div>
+
+    <!-- Normal cards -->
+    <div class="listing-card">
+      <span class="card-badge badge-fresh">Just listed</span>
+      <div class="card-district">Huye District</div>
+      <div class="card-produce">Tomatoes</div>
+      <div class="card-coop">Huye South Coop · <span>Verified ✓</span></div>
+      <div class="card-details">
+        <div>
+          <div class="card-volume">Per kilogram</div>
+          <div class="card-price">195 <sub>RWF/kg</sub></div>
+        </div>
+        <button class="card-order-btn">Order</button>
+      </div>
+    </div>
+
+    <div class="listing-card">
+      <span class="card-badge badge-exp">Export grade</span>
+      <div class="card-district">Nyamasheke</div>
+      <div class="card-produce">Arabica Coffee</div>
+      <div class="card-coop">Cyato Coop · <span>Verified ✓</span></div>
+      <div class="card-details">
+        <div>
+          <div class="card-volume">Per kilogram (raw)</div>
+          <div class="card-price">1,400 <sub>RWF/kg</sub></div>
+        </div>
+        <button class="card-order-btn">Order</button>
+      </div>
+    </div>
+
+    <div class="listing-card">
+      <span class="card-badge badge-fresh">Fresh harvest</span>
+      <div class="card-district">Kayonza</div>
+      <div class="card-produce">Avocado</div>
+      <div class="card-coop">Kayonza East Coop · <span>Verified ✓</span></div>
+      <div class="card-details">
+        <div>
+          <div class="card-volume">Per piece</div>
+          <div class="card-price">120 <sub>RWF/pc</sub></div>
+        </div>
+        <button class="card-order-btn">Order</button>
+      </div>
+    </div>
+
+    <div class="listing-card">
+      <span class="card-badge badge-bulk">Bulk available</span>
+      <div class="card-district">Gatsibo</div>
+      <div class="card-produce">Dry Beans</div>
+      <div class="card-coop">Gatsibo Coop · <span>Verified ✓</span></div>
+      <div class="card-details">
+        <div>
+          <div class="card-volume">Per kilogram</div>
+          <div class="card-price">520 <sub>RWF/kg</sub></div>
+        </div>
+        <button class="card-order-btn">Order</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="flow-section" id="how">
+  <div class="section-label" style="margin-bottom:12px">Simple process</div>
+  <div class="section-title">From field<br><em>to your kitchen</em></div>
+
+  <div class="flow-grid">
+    <div class="flow-step">
+      <div class="flow-num">01</div>
+      <div class="flow-icon">🌾</div>
+      <div class="flow-title">Coop lists produce</div>
+      <div class="flow-desc">Cooperative managers list available stock — quantity, price, location — via the mobile PWA in Kinyarwanda.</div>
+      <div class="flow-arrow">›</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">02</div>
+      <div class="flow-icon">🔍</div>
+      <div class="flow-title">Buyer browses</div>
+      <div class="flow-desc">Hotels, restaurants, schools filter produce by type, location, and quantity. Live market reference prices shown.</div>
+      <div class="flow-arrow">›</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">03</div>
+      <div class="flow-icon">💳</div>
+      <div class="flow-title">Pay via MoMo</div>
+      <div class="flow-desc">Payment is held in escrow via MTN MoMo. The cooperative is notified via SMS instantly.</div>
+      <div class="flow-arrow">›</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">04</div>
+      <div class="flow-icon">🚚</div>
+      <div class="flow-title">Deliver & release</div>
+      <div class="flow-desc">On delivery confirmation, escrow releases automatically to the cooperative. Both parties rate the transaction.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust-section">
+  <div>
+    <div class="section-label">Why AgroLink</div>
+    <blockquote class="trust-quote">
+      "Before, we sold tomatoes at <strong>100 RWF/kg</strong> to intermediaries.
+      Now our cooperative earns <strong>190 RWF/kg</strong> directly."
+    </blockquote>
+    <div class="trust-attribution">— Jean-Paul M., Musanze North Cooperative</div>
+  </div>
+  <div class="trust-metrics">
+    <div class="metric-card">
+      <div class="metric-val">34<span>%</span></div>
+      <div class="metric-desc">Higher farmer income</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">0<span>%</span></div>
+      <div class="metric-desc">Middleman cut</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">48<span>h</span></div>
+      <div class="metric-desc">Order fulfillment</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">3<span>%</span></div>
+      <div class="metric-desc">Platform fee only</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-label">Join AgroLink Rwanda</div>
+  <h2 class="cta-title">Ready to cut<br><em>the middleman?</em></h2>
+  <p class="cta-sub">Whether you're a cooperative manager or a Kigali restaurant, AgroLink connects you to the freshest produce at fair prices.</p>
+  <div class="cta-btns">
+    <a href="#" class="btn-primary">Join as a Buyer</a>
+    <a href="#" class="btn-ghost">Register Cooperative</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Agro<span>Link</span> Rwanda</div>
+  <div class="footer-copy">© 2025 DOCKS Corporation · Built in Kigali 🇷🇼</div>
+</footer>
+
+<!-- PORTAL QUICK-SWITCH -->
+<div class="portal-switch">
+  <div class="portal-btn" onclick="sendPrompt('Build me the Buyer Portal dashboard for AgroLink')">Buyer Portal →</div>
+  <div class="portal-btn" onclick="sendPrompt('Build me the Cooperative Manager portal for AgroLink')">Coop Portal →</div>
+  <div class="portal-btn" onclick="sendPrompt('Build me the Admin Dashboard for AgroLink')">Admin Panel →</div>
+</div>
+
+</body>
+</html>
