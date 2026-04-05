@@ -1,0 +1,247 @@
+.marketplace-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* HERO SECTION */
+.marketplace-hero {
+  padding: 60px 48px;
+  background: radial-gradient(circle at top right, rgba(127, 209, 71, 0.08), transparent 40%),
+              radial-gradient(circle at bottom left, rgba(245, 168, 50, 0.03), transparent 30%),
+              var(--deep);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.marketplace-hero-content {
+  max-width: 800px;
+  width: 100%;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  color: var(--cream);
+}
+
+.hero-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--lime);
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto 36px;
+}
+
+.hero-search-container {
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto 32px;
+}
+
+.hero-search-container .search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.hero-search-container .search-icon {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--lime);
+  pointer-events: none;
+}
+
+.hero-search-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px 24px 18px 60px;
+  border-radius: 100px;
+  color: var(--cream);
+  font-size: 16px;
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.hero-search-input:focus {
+  outline: none;
+  border-color: var(--lime);
+  background: var(--card);
+  box-shadow: 0 15px 40px rgba(127, 209, 71, 0.1);
+  transform: translateY(-2px);
+}
+
+.hero-filter-pills {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* MAIN CONTENT */
+.marketplace-main {
+  padding: 48px;
+  width: 100%;
+}
+
+.marketplace-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.toolbar-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cream);
+}
+
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 32px !important;
+}
+
+@media (max-width: 1200px) {
+  .listings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .listings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* EMPTY STATE */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 48px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-top: 32px;
+}
+
+.empty-icon-wrap {
+  width: 96px;
+  height: 96px;
+  background: var(--soil);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  color: var(--muted);
+}
+
+.empty-title {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+.empty-desc {
+  max-width: 480px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* PILLS */
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pill:hover {
+  border-color: var(--lime);
+  color: var(--cream);
+}
+
+.pill.active {
+  background: var(--lime);
+  color: #000;
+  border-color: var(--lime);
+}
+
+.pill span {
+  font-size: 16px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .marketplace-hero {
+    padding: 48px 24px;
+  }
+  
+  .hero-title {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+  
+  .hero-search-input {
+    padding: 16px 20px 16px 52px;
+    font-size: 15px;
+  }
+  
+  .marketplace-main {
+    padding: 32px 24px;
+  }
+  
+  .marketplace-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-hero {
+    padding: 40px 20px;
+  }
+  .hero-title {
+    font-size: 32px;
+  }
+  .hero-search-input {
+    padding: 14px 16px 14px 44px;
+    font-size: 14px;
+  }
+  .hero-search-container .search-icon {
+    left: 16px;
+  }
+}

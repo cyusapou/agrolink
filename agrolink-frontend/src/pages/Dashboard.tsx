@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Home, Users, Wheat, CreditCard } from 'lucide-react';
 import axios from 'axios';
 
 interface ProduceDef {
@@ -13,7 +14,6 @@ const Dashboard: React.FC = () => {
   const [produce, setProduce] = useState<ProduceDef[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fallback data mapping to existing UI elements if backend is empty
   const defaultListings = [
     { id: 1, productName: 'Irish Potatoes', pricePerKg: 280, quantityKg: 500, cooperativeName: 'Musanze North Coop' },
     { id: 2, productName: 'Tomatoes', pricePerKg: 195, quantityKg: 150, cooperativeName: 'Huye South Coop' },
@@ -23,9 +23,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Attempt to fetch from NestJS
         const res = await axios.get('http://localhost:3000/produce');
-        // If empty, supply default visually matching data
         setProduce(res.data.length > 0 ? res.data : defaultListings);
       } catch (e) {
         setProduce(defaultListings);
@@ -38,60 +36,77 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <div className="section-label" style={{ marginBottom: '8px' }}>Overview</div>
-      <h2 className="section-title" style={{ fontSize: '32px', marginBottom: '32px' }}>Dashboard <em>Metrics</em></h2>
+      <div className="section-label">Overview</div>
+      <h2 className="section-title">Dashboard <em>Metrics</em></h2>
 
-      <div className="trust-metrics" style={{ gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '48px' }}>
-        <div className="metric-card" style={{ padding: '24px' }}>
-          <div className="metric-val" style={{ fontSize: '32px' }}>214</div>
-          <div className="metric-desc">Total Cooperatives</div>
+      <div className="stats-grid" style={{ animation: 'fadeUp 0.6s ease both' }}>
+        <div className="stat-card">
+          <div>
+            <div className="stat-card-label">Cooperatives</div>
+            <div className="stat-card-value">214</div>
+          </div>
+          <div className="stat-card-icon"><Home size={20} /></div>
         </div>
-        <div className="metric-card" style={{ padding: '24px' }}>
-          <div className="metric-val" style={{ fontSize: '32px' }}>1.8<span>k</span></div>
-          <div className="metric-desc">Active Farmers</div>
+        
+        <div className="stat-card">
+          <div>
+            <div className="stat-card-label">Active Farmers</div>
+            <div className="stat-card-value">1,800</div>
+          </div>
+          <div className="stat-card-icon"><Users size={20} /></div>
         </div>
-        <div className="metric-card" style={{ padding: '24px' }}>
-          <div className="metric-val" style={{ fontSize: '32px' }}>24<span>t</span></div>
-          <div className="metric-desc">Produce Listed</div>
+        
+        <div className="stat-card">
+          <div>
+            <div className="stat-card-label">Produce Listed</div>
+            <div className="stat-card-value">24 <sub>tons</sub></div>
+          </div>
+          <div className="stat-card-icon"><Wheat size={20} /></div>
         </div>
-        <div className="metric-card" style={{ padding: '24px' }}>
-          <div className="metric-val" style={{ fontSize: '32px' }}>12.4<span>m</span></div>
-          <div className="metric-desc">MoMo Processed (RWF)</div>
+        
+        <div className="stat-card">
+          <div>
+            <div className="stat-card-label">Total Volume</div>
+            <div className="stat-card-value" style={{ fontSize: '20px' }}>12.4M <sub>RWF</sub></div>
+          </div>
+          <div className="stat-card-icon"><CreditCard size={20} /></div>
         </div>
       </div>
 
-      <div style={{ background: 'var(--card)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+      <div className="form-container" style={{ padding: '0', overflow: 'hidden' }}>
         <div style={{ padding: '24px', borderBottom: '1px solid var(--border)' }}>
-          <h3 style={{ fontFamily: 'var(--serif)', fontSize: '20px' }}>Recent Produce Listings</h3>
+          <h3 style={{ fontFamily: 'var(--serif)', fontSize: '20px', color: 'var(--cream)' }}>Recent Produce Listings</h3>
         </div>
         
         {loading ? (
           <div style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)' }}>Loading records...</div>
         ) : (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Produce Type</th>
-                <th>Cooperative</th>
-                <th>Quantity</th>
-                <th>Asking Price</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {produce.map((item) => (
-                <tr key={item.id}>
-                  <td>#{String(item.id).padStart(4, '0')}</td>
-                  <td style={{ fontWeight: 600 }}>{item.productName}</td>
-                  <td style={{ color: 'var(--muted)' }}>{item.cooperativeName}</td>
-                  <td>{item.quantityKg} kg</td>
-                  <td>{item.pricePerKg} RWF/kg</td>
-                  <td><span style={{ background: 'rgba(127,209,71,0.15)', color: 'var(--lime)', padding: '4px 10px', borderRadius: '100px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>Active</span></td>
+          <div className="overflow-x-auto">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Produce Type</th>
+                  <th>Cooperative</th>
+                  <th>Quantity</th>
+                  <th>Asking Price</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {produce.map((item) => (
+                  <tr key={item.id}>
+                    <td>#{String(item.id).padStart(4, '0')}</td>
+                    <td style={{ fontWeight: 600 }}>{item.productName}</td>
+                    <td style={{ color: 'var(--muted)' }}>{item.cooperativeName}</td>
+                    <td>{item.quantityKg} kg</td>
+                    <td>{item.pricePerKg} RWF/kg</td>
+                    <td><span className="status-badge active">Active</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

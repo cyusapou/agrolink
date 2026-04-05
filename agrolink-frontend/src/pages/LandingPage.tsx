@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <>
-      <nav>
-        <Link to="/" className="logo">Agro<span>Link</span></Link>
-        <ul className="nav-links">
-          <li><a href="#listings">Marketplace</a></li>
-          <li><a href="#how">How it works</a></li>
-          <li><a href="#trust">Why AgroLink</a></li>
+      <nav className={isMenuOpen ? 'nav-open' : ''}>
+        <Link to="/" className="logo" onClick={closeMenu}>Agro<span>Link</span></Link>
+        
+        <button className="nav-toggle" onClick={toggleMenu}>
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+          <li><a href="#listings" onClick={closeMenu}>Marketplace</a></li>
+          <li><a href="#how" onClick={closeMenu}>How it works</a></li>
+          <li><a href="#trust" onClick={closeMenu}>Why AgroLink</a></li>
+          <li className="mobile-only">
+            <Link to="/login" className="nav-cta" onClick={closeMenu}>Login / Signup</Link>
+          </li>
         </ul>
-        <Link to="/login" className="nav-cta">Login / Signup</Link>
+        
+        <Link to="/login" className="nav-cta desktop-only">Login / Signup</Link>
       </nav>
 
       <section className="hero">
@@ -37,19 +51,19 @@ const LandingPage: React.FC = () => {
         </div>
 
         <div className="hero-stats">
-          <div>
+          <div className="stat-item">
             <div className="stat-num">214<span>+</span></div>
             <div className="stat-label">Cooperatives</div>
           </div>
-          <div>
+          <div className="stat-item">
             <div className="stat-num">1,800<span>+</span></div>
             <div className="stat-label">Farmers reached</div>
           </div>
-          <div>
+          <div className="stat-item">
             <div className="stat-num">48<span>h</span></div>
             <div className="stat-label">Avg. order fulfillment</div>
           </div>
-          <div>
+          <div className="stat-item">
             <div className="stat-num">34<span>%</span></div>
             <div className="stat-label">Better price for farmers</div>
           </div>
@@ -87,7 +101,7 @@ const LandingPage: React.FC = () => {
             <div className="card-district">Musanze District</div>
             <div className="card-produce">Irish Potatoes</div>
             <div className="card-coop">Musanze North Coop · <span>Verified ✓</span></div>
-            <div style={{display:'flex', gap:'24px', margin:'20px 0', fontSize:'13px', color:'var(--muted)'}}>
+            <div className="featured-tags">
               <span>🌿 Organically grown</span>
               <span>📦 500kg available</span>
               <span>🚚 Delivery in 24h</span>
@@ -167,7 +181,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       <section className="trust-section" id="trust">
-        <div>
+        <div className="trust-content">
           <div className="section-label">Why AgroLink</div>
           <blockquote className="trust-quote">
             "Before, we sold tomatoes at <strong>100 RWF/kg</strong> to intermediaries.
@@ -200,8 +214,8 @@ const LandingPage: React.FC = () => {
         <h2 className="cta-title">Ready to cut<br/><em>the middleman?</em></h2>
         <p className="cta-sub">Whether you're a cooperative manager or a Kigali restaurant, AgroLink connects you to the freshest produce at fair prices.</p>
         <div className="cta-btns">
-          <button onClick={() => navigate('/login')} className="btn-primary">Join as a Buyer</button>
-          <button onClick={() => navigate('/login')} className="btn-ghost">Register Cooperative</button>
+          <button onClick={() => navigate('/signup')} className="btn-primary">Join as a Buyer</button>
+          <button onClick={() => navigate('/signup')} className="btn-ghost">Register Cooperative</button>
         </div>
       </section>
 

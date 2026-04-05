@@ -25,8 +25,9 @@ export class CreateProduceDto {
   @Min(0)
   price: number;
 
+  @IsOptional()
   @IsInt()
-  farmerId: number;
+  farmerId?: number;
 
   @IsOptional()
   @IsBoolean()

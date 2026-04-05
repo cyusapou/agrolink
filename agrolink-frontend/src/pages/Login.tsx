@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../hooks/useAuth';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
-        username,
-        password,
-      });
-      // Store token (in a real app, use Context or Redux)
-      localStorage.setItem('agrolink-token', response.data.access_token);
-      navigate('/dashboard');
+      await login(email, password, navigate);
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Invalid email or password');
     }
   };
 
@@ -43,13 +38,13 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleLogin}>
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label className="form-label">Email</label>
               <input 
-                type="text" 
+                type="email" 
                 className="form-control" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email"
                 required
               />
             </div>

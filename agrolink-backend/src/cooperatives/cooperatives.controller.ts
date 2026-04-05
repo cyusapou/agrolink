@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { Cooperative } from './cooperative.entity';
+import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
 import { CooperativesService } from './cooperatives.service';
+import { Cooperative } from './cooperative.entity';
 import { CreateCooperativeDto } from './dto/create-cooperative.dto';
 import { UpdateCooperativeDto } from './dto/update-cooperative.dto';
-import { Roles } from '../auth/roles.decorator';
+import { Roles, AppRole } from '../auth/roles.decorator';
 import { Public } from '../auth/public.decorator';
 
 @Controller('cooperatives')
@@ -16,13 +16,13 @@ export class CooperativesController {
     return this.cooperativesService.findAll();
   }
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Post()
   create(@Body() body: CreateCooperativeDto): Promise<Cooperative> {
     return this.cooperativesService.create(body);
   }
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -31,7 +31,7 @@ export class CooperativesController {
     return this.cooperativesService.update(Number(id), body);
   }
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.cooperativesService.softDelete(Number(id));

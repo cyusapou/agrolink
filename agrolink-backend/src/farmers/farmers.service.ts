@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Farmer } from './farmer.entity';
 import { Cooperative } from '../cooperatives/cooperative.entity';
+import { User } from '../users/entities/user.entity';
 import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
 
@@ -17,13 +18,15 @@ export class FarmersService {
     private readonly farmerRepository: Repository<Farmer>,
     @InjectRepository(Cooperative)
     private readonly cooperativeRepository: Repository<Cooperative>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   findAll(): Promise<Farmer[]> {
     return this.farmerRepository.find({ relations: ['cooperative'] });
   }
 
-  async create(payload: CreateFarmerDto): Promise<Farmer> {
+  async create(payload: CreateFarmerDto, userId?: number): Promise<Farmer> {
     const duplicate = await this.farmerRepository.findOne({
       where: { email: payload.email },
     });
@@ -31,10 +34,22 @@ export class FarmersService {
       throw new ConflictException('A farmer with this email already exists');
     }
 
-    // Auto-assignment rule: if no cooperativeId is provided,
-    // assign farmer to the first active cooperative.
     let cooperativeId = payload.cooperativeId;
-    if (!cooperativeId) {
+    
+    // If userId is provided (cooperative manager), use their cooperative
+    if (userId) {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['cooperative'],
+      });
+      
+      if (!user || !user.cooperative) {
+        throw new NotFoundException('User or cooperative not found');
+      }
+      
+      cooperativeId = user.cooperative.id;
+    } else if (!cooperativeId) {
+      // Auto-assignment: assign to first active cooperative
       const fallbackCooperative = await this.cooperativeRepository.findOne({
         where: { isActive: true },
         order: { id: 'ASC' },

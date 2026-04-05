@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Index,
+  ManyToOne,
 } from 'typeorm';
+import { Order } from '../orders/entities/order.entity';
 
 @Entity()
 export class Payment {
@@ -24,6 +26,9 @@ export class Payment {
 
   @Column()
   status: 'pending' | 'confirmed' | 'failed';
+
+  @ManyToOne(() => Order, { nullable: true })
+  order: Order;
 
   @Column({ type: 'json', nullable: true })
   mtnResponse?: unknown;

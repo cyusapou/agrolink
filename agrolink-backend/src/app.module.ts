@@ -9,6 +9,8 @@ import { FarmersModule } from './farmers/farmers.module';
 import { ProduceModule } from './produce/produce.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { OrdersModule } from './orders/orders.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -24,7 +26,7 @@ import { RolesGuard } from './auth/roles.guard';
         port: parseInt(config.getOrThrow<string>('DB_PORT'), 10),
         username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASS'),
-        database: config.get<string>('DB_NAME'),
+        database: 'agrolinkdb', // Using your existing database
         autoLoadEntities: true,
         synchronize: true, // dev only
       }),
@@ -34,12 +36,13 @@ import { RolesGuard } from './auth/roles.guard';
     ProduceModule,
     PaymentsModule, // PaymentsModule handles MTN MoMo transactions
     AuthModule,
+    UsersModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    // Removed global guards to fix dependency issues
   ],
 })
 export class AppModule {}

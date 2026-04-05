@@ -1,43 +1,103 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 import { AppRole } from './roles.decorator';
-
-type DemoUser = {
-  id: number;
-  username: string;
-  password: string;
-  role: AppRole;
-};
 
 @Injectable()
 export class AuthService {
-  // Demo users for local development.
-  private readonly users: DemoUser[] = [
-    { id: 1, username: 'admin', password: 'admin123', role: 'admin' },
-    { id: 2, username: 'user', password: 'user123', role: 'user' },
-  ];
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
 
-  constructor(private readonly jwtService: JwtService) {}
+  async login(email: string, password: string) {
+    const user = await this.usersService.findByEmail(email);
 
-  async login(username: string, password: string) {
-    const user = this.users.find(
-      (u) => u.username === username && u.password === password,
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const isPasswordValid = await this.usersService.validatePassword(
+      password,
+      user.passwordHash,
     );
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid username or password');
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const accessToken = await this.jwtService.signAsync({
       sub: user.id,
-      username: user.username,
+      email: user.email,
       role: user.role,
     });
 
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      { secret: process.env.JWT_REFRESH_SECRET, expiresIn: '7d' },
+    );
+
     return {
       accessToken,
-      user: { id: user.id, username: user.username, role: user.role },
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        cooperative: user.cooperative,
+      },
     };
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const user = await this.usersService.findById(payload.sub);
+
+      if (!user || !user.isActive) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      const newAccessToken = await this.jwtService.signAsync({
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      });
+
+      return {
+        accessToken: newAccessToken,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (user && user.isActive) {
+      const isPasswordValid = await this.usersService.validatePassword(
+        password,
+        user.passwordHash,
+      );
+
+      if (isPasswordValid) {
+        return user;
+      }
+    }
+
+    return null;
   }
 }
 

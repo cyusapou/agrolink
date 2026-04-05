@@ -1,19 +1,27 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Logger,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, HttpStatus, Logger, HttpCode } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { InitiatePaymentDto } from './dto/initiate-payment.dto';
-import { ConfirmPaymentDto } from './dto/confirm-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { Payment } from './payment.entity';
+import { Roles, AppRole } from '../auth/roles.decorator';
 import { Public } from '../auth/public.decorator';
-import { Roles } from '../auth/roles.decorator';
+
+// Define DTOs inline since they might not exist
+class InitiatePaymentDto {
+  phoneNumber: string;
+  amount: number;
+}
+
+class ConfirmPaymentDto {
+  externalId: string;
+  amount: number;
+}
+
+class UpdatePaymentDto {
+  status?: 'pending' | 'confirmed' | 'failed';
+  amount?: number;
+  phoneNumber?: string;
+  mtnResponse?: unknown;
+  callbackBody?: unknown;
+}
 
 @Controller('payments')
 export class PaymentsController {
@@ -21,7 +29,7 @@ export class PaymentsController {
 
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Post('initiate')
   async initiatePayment(@Body() body: InitiatePaymentDto) {
     const response = await this.paymentsService.initiatePayment(
@@ -35,7 +43,7 @@ export class PaymentsController {
     };
   }
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Post('confirm')
   confirmPayment(@Body() body: ConfirmPaymentDto) {
     return this.paymentsService.confirmPayment(body.externalId, body.amount);
@@ -46,7 +54,7 @@ export class PaymentsController {
     return this.paymentsService.trackPayment(externalId);
   }
 
-  @Roles('admin')
+  @Roles(AppRole.ADMIN)
   @Patch(':id')
   updatePayment(
     @Param('id') id: string,

@@ -10,8 +10,8 @@ import { Payment } from './payment.entity';
   imports: [HttpModule, TypeOrmModule.forFeature([Payment])],
   // Register the REST endpoints for payment initiation and callbacks.
   controllers: [PaymentsController],
-  // Register business logic for integrating with MTN MoMo.
+  // Register the business logic for integrating with MTN MoMo.
   providers: [PaymentsService],
+  exports: [PaymentsService],
 })
 export class PaymentsModule {}
-
