@@ -43,17 +43,17 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', zIndex: '10000', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-      <div className="form-container" style={{ width: '100%', maxWidth: '480px', animation: 'fadeUp 0.4s ease both', padding: '32px' }}>
-        <div className="flex justify-between items-start mb-8">
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <div className="modal-header">
           <div>
-            <div className="section-label" style={{ color: 'var(--lime)' }}>Team Growth</div>
+            <div className="section-label">Team Growth</div>
             <h3 className="section-title" style={{ fontSize: '28px' }}>Register <em>Farmer</em></h3>
           </div>
           <button 
             onClick={onClose} 
             disabled={loading}
-            style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--muted)', cursor: 'pointer', padding: '8px', borderRadius: '50%', display: 'flex' }}
+            className="close-btn"
           >
             <X size={20} />
           </button>
@@ -99,9 +99,9 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ onClose, onSuccess }) => {
 
           <button
             type="submit"
-            className="btn-primary"
+            className="btn-primary w-full"
             disabled={loading}
-            style={{ width: '100%', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            style={{ marginTop: '8px' }}
           >
             {loading ? 'Processing...' : <><Plus size={18} /> Confirm Registration</>}
           </button>

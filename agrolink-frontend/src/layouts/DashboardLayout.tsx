@@ -88,7 +88,7 @@ const DashboardLayout: React.FC = () => {
       {/* SIDEBAR */}
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="flex items-center justify-between w-full" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="flex items-center justify-between w-full">
             <Link to="/" className="logo">Agro<span>Link</span></Link>
             <button 
               className="sidebar-close-btn"
@@ -120,8 +120,7 @@ const DashboardLayout: React.FC = () => {
         <div className="sidebar-footer">
           <button 
             onClick={handleLogout}
-            className="sidebar-link" 
-            style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+            className="sidebar-footer-btn"
           >
             <LogOut size={18} /> Logout
           </button>
@@ -131,7 +130,7 @@ const DashboardLayout: React.FC = () => {
       {/* MAIN CONTENT */}
       <main className="main-content">
         <header className="topbar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div className="flex items-center gap-4">
             <button 
               className="menu-toggle-btn"
               onClick={() => setIsSidebarOpen(true)}
@@ -142,25 +141,11 @@ const DashboardLayout: React.FC = () => {
               {getPortalTitle()}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div className="flex items-center gap-6">
             {user?.role === 'BUYER' && (
               <button 
                 className="cart-toggle-btn"
                 onClick={() => setIsDrawerOpen(true)}
-                style={{ 
-                  background: 'none', 
-                  border: '1px solid var(--border)', 
-                  borderRadius: '100px',
-                  padding: '8px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: 'var(--cream)',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  position: 'relative'
-                }}
               >
                 <ShoppingCart size={18} />
                 <span className="cart-btn-text">Basket</span>

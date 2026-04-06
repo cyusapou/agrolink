@@ -295,11 +295,11 @@ const ProduceManagement: React.FC = () => {
 
       {/* Form Modal */}
       {showAddForm && (
-        <div style={{ position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', zIndex: '10000', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div className="form-container" style={{ width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto', animation: 'fadeUp 0.4s ease both', padding: '32px', scrollbarWidth: 'none' }}>
-            <div className="flex justify-between items-start mb-8">
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
               <div>
-                <div className="section-label" style={{ color: 'var(--lime)' }}>Inventory Update</div>
+                <div className="section-label">Inventory Update</div>
                 <h3 className="section-title" style={{ fontSize: '28px' }}>{editingItem ? 'Edit' : 'Add'} <em>Produce</em></h3>
               </div>
               <button 
@@ -307,7 +307,7 @@ const ProduceManagement: React.FC = () => {
                   setShowAddForm(false);
                   setEditingItem(null);
                 }} 
-                style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: 'var(--muted)', cursor: 'pointer', padding: '8px', borderRadius: '50%', display: 'flex' }}
+                className="close-btn"
               >
                 <X size={20} />
               </button>
@@ -337,8 +337,8 @@ const ProduceManagement: React.FC = () => {
                   placeholder="Describe the quality, variety, and harvest date..."
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="form-group">
+              <div className="flex gap-6">
+                <div className="form-group w-full">
                   <label className="form-label">Quantity Available (kg)</label>
                   <input
                     type="number"
@@ -349,7 +349,7 @@ const ProduceManagement: React.FC = () => {
                     className="form-control"
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group w-full">
                   <label className="form-label">Price per Unit (RWF/kg)</label>
                   <input
                     type="number"
@@ -363,8 +363,8 @@ const ProduceManagement: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="btn-primary"
-                style={{ width: '100%', marginTop: '8px' }}
+                className="btn-primary w-full"
+                style={{ marginTop: '8px' }}
               >
                 {editingItem ? 'Save Changes' : 'Confirm & List Produce'}
               </button>

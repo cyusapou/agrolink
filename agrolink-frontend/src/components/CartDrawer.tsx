@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { X, Minus, Plus, ShoppingBag, ArrowRight } from 'lucide-react';
-import CheckoutForm from './CheckoutForm';
-import './CheckoutForm.css';
+import { useNavigate } from 'react-router-dom';
 
 interface Produce {
   id: number;
@@ -9,6 +8,11 @@ interface Produce {
   price: number;
   quantity: number;
   category?: string;
+  farmer?: {
+    cooperative: {
+      name: string;
+    }
+  };
 }
 
 interface CartItem {
@@ -33,14 +37,11 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemove, 
   total 
 }) => {
-  const [showCheckout, setShowCheckout] = useState(false);
+  const navigate = useNavigate();
 
-  const handleCheckoutSuccess = (orderId: number) => {
-    // Order successful, cart is cleared by CheckoutForm
-    setShowCheckout(false);
+  const handleCheckout = () => {
     onClose();
-    // You could navigate to order tracking page here
-    console.log('Order created with ID:', orderId);
+    navigate('/buyer/checkout');
   };
 
   const getEmoji = (category: string = '') => {
@@ -63,29 +64,25 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
       {/* Drawer */}
       <div className={`cart-drawer ${isOpen ? 'open' : ''}`}>
         <div className="cart-header">
-          <div className="flex items-center gap-3">
-            <h2 className="cart-title">Your Basket</h2>
-            <span className="badge-fresh px-3 py-1 rounded-full text-xs font-bold">
-              {items.length} Items
-            </span>
+          <div>
+            <h2 className="cart-title">Your <em>Basket</em></h2>
+            <p className="text-[10px] text-[var(--muted)] uppercase font-bold tracking-widest mt-1">
+              {items.length} {items.length === 1 ? 'Product' : 'Products'} Selected
+            </p>
           </div>
-          <button className="close-cart" onClick={onClose}>
-            <X size={24} />
+          <button className="close-cart-btn" onClick={onClose} aria-label="Close cart">
+            <X size={20} />
           </button>
         </div>
 
         <div className="cart-items">
           {items.length === 0 ? (
-            <div className="text-center py-12 flex flex-col items-center gap-4">
-              <div className="w-16 h-16 bg-[var(--surface)] border border-[var(--border)] rounded-full flex items-center justify-center text-2xl">
-                🛒
-              </div>
-              <div>
-                <p className="text-[var(--cream)] font-bold">Your basket is empty</p>
-                <p className="text-[var(--muted)] text-sm mt-1">Start adding some fresh produce!</p>
-              </div>
-              <button className="btn-ghost mt-4" onClick={onClose}>
-                Browse Marketplace
+            <div className="empty-cart-state">
+              <div className="empty-cart-icon">🛒</div>
+              <h3 className="empty-cart-title">Your basket is empty</h3>
+              <p className="empty-cart-text">Looks like you haven't added any fresh produce to your basket yet.</p>
+              <button className="btn-primary mt-6" onClick={onClose}>
+                Start Shopping
               </button>
             </div>
           ) : (
@@ -94,34 +91,47 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="cart-item-img">
                   {getEmoji(item.produce.category)}
                 </div>
-                <div className="cart-item-info">
-                  <h4 className="cart-item-name">{item.produce.name}</h4>
-                  <p className="cart-item-price">
-                    RWF {item.produce.price.toLocaleString()} / kg
-                  </p>
-                  <div className="flex items-center gap-4 mt-3">
-                    <div className="cart-item-actions">
+                <div className="cart-item-content">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="cart-item-name">{item.produce.name}</h4>
+                      {item.produce.farmer?.cooperative?.name && (
+                        <p className="cart-item-vendor">
+                          Sold by <span>{item.produce.farmer.cooperative.name}</span>
+                        </p>
+                      )}
+                    </div>
+                    <button 
+                      className="remove-item-btn"
+                      onClick={() => onRemove(item.produce.id)}
+                      title="Remove"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                  
+                  <div className="cart-item-footer">
+                    <div className="cart-item-pricing">
+                      <span className="price-tag">RWF {item.produce.price.toLocaleString()}</span>
+                      <span className="price-unit">/ kg</span>
+                    </div>
+                    
+                    <div className="qty-control">
                       <button 
-                        className="qty-btn"
+                        className="qty-action"
                         onClick={() => onUpdateQuantity(item.produce.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
                       >
-                        <Minus size={14} />
+                        <Minus size={12} />
                       </button>
-                      <span className="text-[var(--cream)] font-bold text-sm min-w-[20px] text-center">
-                        {item.quantity}
-                      </span>
+                      <span className="qty-number">{item.quantity}</span>
                       <button 
-                        className="qty-btn"
+                        className="qty-action"
                         onClick={() => onUpdateQuantity(item.produce.id, item.quantity + 1)}
                       >
-                        <Plus size={14} />
+                        <Plus size={12} />
                       </button>
                     </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[var(--cream)] font-bold">
-                    RWF {(item.produce.price * item.quantity).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -131,30 +141,33 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {items.length > 0 && (
           <div className="cart-footer">
-            <div className="cart-total">
-              <div>
-                <div className="total-label">Subtotal</div>
-                <div className="text-[var(--muted)] text-xs">Excludes delivery fees</div>
+            <div className="cart-summary">
+              <div className="summary-row">
+                <span>Subtotal ({items.length} items)</span>
+                <span>RWF {total.toLocaleString()}</span>
               </div>
-              <div className="total-value">RWF {total.toLocaleString()}</div>
+              <div className="summary-row text-[var(--lime)] font-bold">
+                <span>Delivery</span>
+                <span>Calculated at checkout</span>
+              </div>
+              <div className="divider-dashed" />
+              <div className="summary-row total">
+                <span>Estimated Total</span>
+                <span className="total-value">RWF {total.toLocaleString()}</span>
+              </div>
             </div>
+            
             <button 
-              className="btn-primary w-full flex items-center justify-center gap-2 py-4"
-              onClick={() => setShowCheckout(true)}
+              className="btn-primary w-full py-4 mt-6 flex items-center justify-center gap-3 group"
+              onClick={handleCheckout}
             >
-              <ShoppingBag size={18} /> Checkout <ArrowRight size={18} />
+              <ShoppingBag size={18} className="transition-transform group-hover:scale-110" /> 
+              Secure Checkout 
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </button>
           </div>
         )}
       </div>
-
-      {/* Checkout Form Modal */}
-      {showCheckout && (
-        <CheckoutForm
-          onClose={() => setShowCheckout(false)}
-          onSuccess={handleCheckoutSuccess}
-        />
-      )}
     </>
   );
 };

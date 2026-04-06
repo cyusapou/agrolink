@@ -81,40 +81,40 @@ const Signup: React.FC = () => {
         </ul>
       </nav>
 
-      <section className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '100px' }}>
-        <div className="form-container" style={{ width: '100%' }}>
-          <div className="section-label" style={{ textAlign: 'center' }}>Registration</div>
-          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '32px', fontSize: '32px' }}>Join <em>AgroLink</em></h2>
+      <section className="section flex items-center justify-center" style={{ minHeight: '100vh', paddingTop: '100px' }}>
+        <div className="form-container">
+          <div className="form-header">
+            <div className="section-label">Registration</div>
+            <h2 className="section-title">Join <em>AgroLink</em></h2>
+          </div>
           
-          {error && <div style={{ color: '#ff4d4f', marginBottom: '16px', fontSize: '14px', textAlign: 'center' }}>{error}</div>}
-          {success && <div style={{ color: 'var(--lime)', marginBottom: '16px', fontSize: '14px', textAlign: 'center', background: 'rgba(127,209,71,0.1)', padding: '12px', borderRadius: '4px' }}>Registration success! Redirecting to login...</div>}
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">Registration success! Redirecting to login...</div>}
 
           <form onSubmit={handleSignup}>
             {/* Role Selector */}
             <div className="form-group">
               <label className="form-label">I am a</label>
-              <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <div className="radio-group">
+                <label className={`radio-option ${role === 'COOP_MANAGER' ? 'selected' : ''}`}>
                   <input 
                     type="radio" 
                     name="role" 
                     value="COOP_MANAGER"
                     checked={role === 'COOP_MANAGER'}
                     onChange={(e) => setRole(e.target.value as 'COOP_MANAGER')}
-                    style={{ marginRight: '8px' }}
                   />
-                  <span style={{ color: 'var(--cream)' }}>Cooperative Manager</span>
+                  <span>Cooperative Manager</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <label className={`radio-option ${role === 'BUYER' ? 'selected' : ''}`}>
                   <input 
                     type="radio" 
                     name="role" 
                     value="BUYER"
                     checked={role === 'BUYER'}
                     onChange={(e) => setRole(e.target.value as 'BUYER')}
-                    style={{ marginRight: '8px' }}
                   />
-                  <span style={{ color: 'var(--cream)' }}>Buyer</span>
+                  <span>Buyer</span>
                 </label>
               </div>
             </div>
@@ -132,30 +132,32 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input 
-                type="password" 
-                className="form-control" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </div>
+            <div className="flex gap-4">
+              <div className="form-group w-full">
+                <label className="form-label">Password</label>
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
 
-            <div className="form-group">
-              <label className="form-label">Confirm Password</label>
-              <input 
-                type="password" 
-                className="form-control" 
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
+              <div className="form-group w-full">
+                <label className="form-label">Confirm</label>
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
             <div className="form-group">
@@ -185,28 +187,30 @@ const Signup: React.FC = () => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Manager Name</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    value={managerName}
-                    onChange={(e) => setManagerName(e.target.value)}
-                    placeholder="Your full name"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label className="form-label">District</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    placeholder="E.g., Kigali"
-                    required
-                  />
+                <div className="flex gap-4">
+                  <div className="form-group w-full">
+                    <label className="form-label">Manager Name</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={managerName}
+                      onChange={(e) => setManagerName(e.target.value)}
+                      placeholder="Your full name"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group w-full">
+                    <label className="form-label">District</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={district}
+                      onChange={(e) => setDistrict(e.target.value)}
+                      placeholder="E.g., Musanze"
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -236,15 +240,14 @@ const Signup: React.FC = () => {
 
             <button 
               type="submit" 
-              className="btn-primary" 
-              style={{ width: '100%', marginTop: '16px' }}
+              className="btn-primary w-full mt-4" 
               disabled={isLoading}
             >
               {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--muted)' }}>
+          <div className="text-center mt-6" style={{ fontSize: '14px', color: 'var(--muted)' }}>
             Already registered? <Link to="/login" style={{ color: 'var(--lime)', textDecoration: 'none' }}>Log in here</Link>
           </div>
         </div>

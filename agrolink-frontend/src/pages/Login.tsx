@@ -29,12 +29,14 @@ const Login: React.FC = () => {
         </ul>
       </nav>
 
-      <section className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '100px' }}>
-        <div className="form-container" style={{ width: '100%' }}>
-          <div className="section-label" style={{ textAlign: 'center' }}>Portal Access</div>
-          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '32px', fontSize: '32px' }}>Welcome <em>Back</em></h2>
+      <section className="section flex items-center justify-center" style={{ minHeight: '100vh', paddingTop: '100px' }}>
+        <div className="form-container">
+          <div className="form-header">
+            <div className="section-label">Portal Access</div>
+            <h2 className="section-title">Welcome <em>Back</em></h2>
+          </div>
           
-          {error && <div style={{ color: '#ff4d4f', marginBottom: '16px', fontSize: '14px', textAlign: 'center' }}>{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleLogin}>
             <div className="form-group">
@@ -61,12 +63,12 @@ const Login: React.FC = () => {
               />
             </div>
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '16px' }}>
+            <button type="submit" className="btn-primary w-full mt-4">
               Sign In
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--muted)' }}>
+          <div className="text-center mt-6" style={{ fontSize: '14px', color: 'var(--muted)' }}>
             Don't have an account? <Link to="/signup" style={{ color: 'var(--lime)', textDecoration: 'none' }}>Register Cooperative</Link>
           </div>
         </div>

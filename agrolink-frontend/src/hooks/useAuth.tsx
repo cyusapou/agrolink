@@ -7,6 +7,7 @@ interface User {
   email: string;
   role: 'ADMIN' | 'COOP_MANAGER' | 'BUYER';
   phone: string;
+  address?: string;
   cooperative?: any;
 }
 

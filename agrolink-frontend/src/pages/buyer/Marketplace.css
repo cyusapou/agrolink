@@ -5,7 +5,7 @@
 
 /* HERO SECTION */
 .marketplace-hero {
-  padding: 60px 48px;
+  padding: 32px 48px;
   background: radial-gradient(circle at top right, rgba(127, 209, 71, 0.08), transparent 40%),
               radial-gradient(circle at bottom left, rgba(245, 168, 50, 0.03), transparent 30%),
               var(--deep);
@@ -23,12 +23,12 @@
 
 .hero-title {
   font-family: var(--serif);
-  font-size: clamp(32px, 5vw, 48px);
+  font-size: clamp(24px, 4vw, 36px);
   font-weight: 900;
-  letter-spacing: -1.5px;
+  letter-spacing: -1px;
   line-height: 1.1;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   color: var(--cream);
 }
 
@@ -39,16 +39,16 @@
 }
 
 .hero-subtitle {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--muted);
   max-width: 500px;
-  margin: 0 auto 36px;
+  margin: 0 auto 24px;
 }
 
 .hero-search-container {
   max-width: 640px;
   width: 100%;
-  margin: 0 auto 32px;
+  margin: 0 auto 24px;
 }
 
 .hero-search-container .search-wrapper {

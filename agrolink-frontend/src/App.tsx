@@ -15,6 +15,7 @@ import ProduceManagement from './pages/coop/ProduceManagement';
 import FarmersManagement from './pages/coop/FarmersManagement';
 import OrdersManagement from './pages/coop/OrdersManagement';
 import Profile from './pages/buyer/Profile';
+import Checkout from './pages/buyer/Checkout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="/buyer" element={<ProtectedRoute requiredRole="BUYER"><DashboardLayout /></ProtectedRoute>}>
               <Route index element={<Marketplace />} />
               <Route path="marketplace" element={<Marketplace />} />
+              <Route path="checkout" element={<Checkout />} />
               <Route path="orders" element={<OrderHistory />} />
               <Route path="profile" element={<Profile />} />
             </Route>
